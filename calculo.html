@@ -1,0 +1,377 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>CalculoQuest - Gamificación de Cálculo Diferencial</title>
+    <style>
+        :root {
+            --primary: #3498db;
+            --secondary: #2ecc71;
+            --accent: #e74c3c;
+            --dark: #2c3e50;
+            --light: #ecf0f1;
+        }
+        
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        }
+        
+        body {
+            background-color: #f5f7fa;
+            color: var(--dark);
+            line-height: 1.6;
+        }
+        
+        header {
+            background: linear-gradient(135deg, var(--primary), var(--dark));
+            color: white;
+            padding: 1rem;
+            text-align: center;
+            box-shadow: 0 4px 6px rgba(0,0,0,0.1);
+        }
+        
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 1rem;
+        }
+        
+        .dashboard {
+            display: grid;
+            grid-template-columns: 1fr 2fr 1fr;
+            gap: 1rem;
+            margin-bottom: 2rem;
+        }
+        
+        .user-card, .leaderboard, .achievements {
+            background: white;
+            border-radius: 10px;
+            padding: 1.5rem;
+            box-shadow: 0 4px 6px rgba(0,0,0,0.05);
+        }
+        
+        .user-card {
+            text-align: center;
+        }
+        
+        .avatar {
+            width: 80px;
+            height: 80px;
+            border-radius: 50%;
+            background-color: var(--primary);
+            margin: 0 auto 1rem;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            font-size: 2rem;
+        }
+        
+        .progress-bar {
+            height: 10px;
+            background-color: #e0e0e0;
+            border-radius: 5px;
+            margin: 1rem 0;
+            overflow: hidden;
+        }
+        
+        .progress {
+            height: 100%;
+            background-color: var(--secondary);
+            width: 65%;
+        }
+        
+        .leaderboard ol {
+            margin-left: 1.5rem;
+        }
+        
+        .achievements .badges {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 0.5rem;
+            margin-top: 1rem;
+        }
+        
+        .badge {
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            background-color: var(--accent);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            font-size: 0.8rem;
+        }
+        
+        .modules {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+            gap: 1.5rem;
+            margin-bottom: 2rem;
+        }
+        
+        .module-card {
+            background: white;
+            border-radius: 10px;
+            padding: 1.5rem;
+            box-shadow: 0 4px 6px rgba(0,0,0,0.05);
+            transition: transform 0.3s ease;
+        }
+        
+        .module-card:hover {
+            transform: translateY(-5px);
+        }
+        
+        .module-card h3 {
+            color: var(--primary);
+            margin-bottom: 0.5rem;
+        }
+        
+        .module-card .difficulty {
+            display: inline-block;
+            padding: 0.2rem 0.5rem;
+            border-radius: 20px;
+            font-size: 0.8rem;
+            margin-bottom: 1rem;
+        }
+        
+        .easy {
+            background-color: #e8f6f3;
+            color: var(--secondary);
+        }
+        
+        .medium {
+            background-color: #fef9e7;
+            color: #f39c12;
+        }
+        
+        .hard {
+            background-color: #fdedec;
+            color: var(--accent);
+        }
+        
+        .btn {
+            display: inline-block;
+            background-color: var(--primary);
+            color: white;
+            padding: 0.5rem 1rem;
+            border-radius: 5px;
+            text-decoration: none;
+            font-weight: bold;
+            margin-top: 1rem;
+            transition: background-color 0.3s ease;
+        }
+        
+        .btn:hover {
+            background-color: #2980b9;
+        }
+        
+        .challenge {
+            background: white;
+            border-radius: 10px;
+            padding: 1.5rem;
+            box-shadow: 0 4px 6px rgba(0,0,0,0.05);
+            margin-bottom: 2rem;
+        }
+        
+        .challenge h2 {
+            color: var(--primary);
+            margin-bottom: 1rem;
+        }
+        
+        .problem {
+            background-color: #f8f9fa;
+            padding: 1rem;
+            border-radius: 5px;
+            margin-bottom: 1rem;
+        }
+        
+        .options {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 1rem;
+        }
+        
+        .option {
+            background-color: #e8f4fc;
+            padding: 1rem;
+            border-radius: 5px;
+            cursor: pointer;
+            transition: background-color 0.3s ease;
+        }
+        
+        .option:hover {
+            background-color: #d1ecf1;
+        }
+        
+        footer {
+            text-align: center;
+            padding: 1rem;
+            background-color: var(--dark);
+            color: white;
+            margin-top: 2rem;
+        }
+        
+        @media (max-width: 768px) {
+            .dashboard {
+                grid-template-columns: 1fr;
+            }
+            
+            .options {
+                grid-template-columns: 1fr;
+            }
+        }
+    </style>
+</head>
+<body>
+    <header>
+        <h1>CalculoQuest</h1>
+        <p>Domina el cálculo diferencial a través del juego</p>
+    </header>
+    
+    <div class="container">
+        <div class="dashboard">
+            <div class="user-card">
+                <div class="avatar">MJ</div>
+                <h2>María José</h2>
+                <p>Nivel 5 - Calculista Novato</p>
+                <div class="progress-bar">
+                    <div class="progress"></div>
+                </div>
+                <p>650/1000 puntos</p>
+                <div class="stats">
+                    <p>Problemas resueltos: 42</p>
+                    <p>Racha actual: 7 días</p>
+                </div>
+            </div>
+            
+            <div class="leaderboard">
+                <h2>Tabla de Líderes</h2>
+                <ol>
+                    <li>Carlos M. - 1200 pts</li>
+                    <li>Ana L. - 980 pts</li>
+                    <li>Pedro R. - 875 pts</li>
+                    <li>María José - 650 pts</li>
+                    <li>Luis G. - 520 pts</li>
+                </ol>
+            </div>
+            
+            <div class="achievements">
+                <h2>Logros</h2>
+                <div class="badges">
+                    <div class="badge" title="Derivadas Básicas">DB</div>
+                    <div class="badge" title="Regla de la Cadena">RC</div>
+                    <div class="badge" title="Límites Maestro">LM</div>
+                    <div class="badge" title="7 días seguidos">7D</div>
+                </div>
+            </div>
+        </div>
+        
+        <div class="modules">
+            <div class="module-card">
+                <h3>Límites y Continuidad</h3>
+                <span class="difficulty easy">Fácil</span>
+                <p>Aprende los fundamentos de límites y continuidad de funciones.</p>
+                <a href="#" class="btn">Comenzar</a>
+            </div>
+            
+            <div class="module-card">
+                <h3>Derivadas Básicas</h3>
+                <span class="difficulty easy">Fácil</span>
+                <p>Domina las reglas básicas de derivación y sus aplicaciones.</p>
+                <a href="#" class="btn">Comenzar</a>
+            </div>
+            
+            <div class="module-card">
+                <h3>Reglas de Derivación</h3>
+                <span class="difficulty medium">Medio</span>
+                <p>Producto, cociente y regla de la cadena para derivadas complejas.</p>
+                <a href="#" class="btn">Comenzar</a>
+            </div>
+            
+            <div class="module-card">
+                <h3>Aplicaciones de Derivadas</h3>
+                <span class="difficulty medium">Medio</span>
+                <p>Optimización, razones de cambio y problemas aplicados.</p>
+                <a href="#" class="btn">Comenzar</a>
+            </div>
+            
+            <div class="module-card">
+                <h3>Derivadas Implícitas</h3>
+                <span class="difficulty hard">Difícil</span>
+                <p>Derivación de funciones definidas implícitamente.</p>
+                <a href="#" class="btn">Comenzar</a>
+            </div>
+            
+            <div class="module-card">
+                <h3>Derivadas de Orden Superior</h3>
+                <span class="difficulty hard">Difícil</span>
+                <p>Segundas derivadas y derivadas de orden superior.</p>
+                <a href="#" class="btn">Comenzar</a>
+            </div>
+        </div>
+        
+        <div class="challenge">
+            <h2>Desafío del Día</h2>
+            <div class="problem">
+                <p>Calcula la derivada de la siguiente función:</p>
+                <p style="text-align: center; font-size: 1.5rem; margin: 1rem 0;">f(x) = 3x² + 5x - 7</p>
+                <p>Selecciona la respuesta correcta:</p>
+            </div>
+            <div class="options">
+                <div class="option">f'(x) = 6x + 5</div>
+                <div class="option">f'(x) = 3x + 5</div>
+                <div class="option">f'(x) = 6x² + 5</div>
+                <div class="option">f'(x) = 3x² + 5</div>
+            </div>
+        </div>
+    </div>
+    
+    <footer>
+        <p>CalculoQuest &copy; 2023 - Aprende cálculo diferencial de forma divertida</p>
+    </footer>
+
+    <script>
+        // Elementos interactivos
+        const options = document.querySelectorAll('.option');
+        
+        options.forEach(option => {
+            option.addEventListener('click', function() {
+                // Remover selección previa
+                options.forEach(opt => opt.style.backgroundColor = '#e8f4fc');
+                
+                // Marcar como seleccionada
+                this.style.backgroundColor = '#d1ecf1';
+                
+                // Verificar respuesta (primera opción es correcta)
+                if (this.textContent === "f'(x) = 6x + 5") {
+                    setTimeout(() => {
+                        alert('¡Correcto! +10 puntos');
+                    }, 300);
+                } else {
+                    setTimeout(() => {
+                        alert('Incorrecto. La respuesta correcta es f\'(x) = 6x + 5');
+                    }, 300);
+                }
+            });
+        });
+        
+        // Simular progreso de usuario
+        const progressBar = document.querySelector('.progress');
+        let progress = 65; // Porcentaje inicial
+        
+        // Simular ganancia de puntos cada 10 segundos
+        setInterval(() => {
+            if (progress < 100) {
+                progress += 1;
+                progressBar.style.width = `${progress}%`;
+            }
+        }, 10000);
+    </script>
+</body>
+</html>
